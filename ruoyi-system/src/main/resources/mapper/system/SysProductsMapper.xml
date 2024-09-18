@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysProductsMapper">
+    
+    <resultMap type="SysProducts" id="SysProductsResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="internalName"    column="internal_name"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="commodityOwnership"    column="commodity_ownership"    />
+        <result property="domainName"    column="domain_name"    />
+        <result property="costPrice"    column="cost_price"    />
+        <result property="purchasingLinks"    column="purchasing_links"    />
+        <result property="description"    column="description"    />
+        <result property="mainImage"    column="main_image"    />
+        <result property="images"    column="images"    />
+        <result property="status"    column="status"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="isDeleted"    column="is_deleted"    />
+        <result property="pixelId"    column="pixel_id"    />
+    </resultMap>
+
+    <sql id="selectSysProductsVo">
+        select id, name, internal_name, category_id, commodity_ownership, domain_name, cost_price, purchasing_links, description, main_image, images, status, created_at, is_deleted, pixel_id from sys_products
+    </sql>
+
+    <select id="selectSysProductsList" parameterType="SysProducts" resultMap="SysProductsResult">
+        <include refid="selectSysProductsVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="internalName != null  and internalName != ''"> and internal_name like concat('%', #{internalName}, '%')</if>
+            <if test="categoryId != null "> and category_id = #{categoryId}</if>
+            <if test="commodityOwnership != null  and commodityOwnership != ''"> and commodity_ownership = #{commodityOwnership}</if>
+            <if test="domainName != null  and domainName != ''"> and domain_name like concat('%', #{domainName}, '%')</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="createdAt != null "> and created_at = #{createdAt}</if>
+            <if test="pixelId != null "> and pixel_id = #{pixelId}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysProductsById" parameterType="Long" resultMap="SysProductsResult">
+        <include refid="selectSysProductsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysProducts" parameterType="SysProducts" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_products
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="internalName != null and internalName != ''">internal_name,</if>
+            <if test="categoryId != null">category_id,</if>
+            <if test="commodityOwnership != null and commodityOwnership != ''">commodity_ownership,</if>
+            <if test="domainName != null">domain_name,</if>
+            <if test="costPrice != null">cost_price,</if>
+            <if test="purchasingLinks != null">purchasing_links,</if>
+            <if test="description != null">description,</if>
+            <if test="mainImage != null">main_image,</if>
+            <if test="images != null">images,</if>
+            <if test="status != null">status,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="isDeleted != null">is_deleted,</if>
+            <if test="pixelId != null">pixel_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="internalName != null and internalName != ''">#{internalName},</if>
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="commodityOwnership != null and commodityOwnership != ''">#{commodityOwnership},</if>
+            <if test="domainName != null">#{domainName},</if>
+            <if test="costPrice != null">#{costPrice},</if>
+            <if test="purchasingLinks != null">#{purchasingLinks},</if>
+            <if test="description != null">#{description},</if>
+            <if test="mainImage != null">#{mainImage},</if>
+            <if test="images != null">#{images},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="isDeleted != null">#{isDeleted},</if>
+            <if test="pixelId != null">#{pixelId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysProducts" parameterType="SysProducts">
+        update sys_products
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="internalName != null and internalName != ''">internal_name = #{internalName},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="commodityOwnership != null and commodityOwnership != ''">commodity_ownership = #{commodityOwnership},</if>
+            <if test="domainName != null">domain_name = #{domainName},</if>
+            <if test="costPrice != null">cost_price = #{costPrice},</if>
+            <if test="purchasingLinks != null">purchasing_links = #{purchasingLinks},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="mainImage != null">main_image = #{mainImage},</if>
+            <if test="images != null">images = #{images},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+            <if test="isDeleted != null">is_deleted = #{isDeleted},</if>
+            <if test="pixelId != null">pixel_id = #{pixelId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysProductsById" parameterType="Long">
+        delete from sys_products where id = #{id}
+    </delete>
+
+    <delete id="deleteSysProductsByIds" parameterType="String">
+        delete from sys_products where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
