@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysProductAttributeMapper">
+    
+    <resultMap type="SysProductAttribute" id="SysProductAttributeResult">
+        <result property="id"    column="id"    />
+        <result property="attributeDescribed"    column="attribute_described"    />
+        <result property="productId"    column="product_id"    />
+        <result property="attributeName"    column="attribute_name"    />
+    </resultMap>
+
+    <sql id="selectSysProductAttributeVo">
+        select id, attribute_described, product_id, attribute_name from sys_product_attribute
+    </sql>
+
+    <select id="selectSysProductAttributeList" parameterType="SysProductAttribute" resultMap="SysProductAttributeResult">
+        <include refid="selectSysProductAttributeVo"/>
+        <where>  
+            <if test="attributeDescribed != null  and attributeDescribed != ''"> and attribute_described = #{attributeDescribed}</if>
+            <if test="productId != null  and productId != ''"> and product_id = #{productId}</if>
+            <if test="attributeName != null  and attributeName != ''"> and attribute_name like concat('%', #{attributeName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectSysProductAttributeById" parameterType="String" resultMap="SysProductAttributeResult">
+        <include refid="selectSysProductAttributeVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectSysProductAttributeBySysProductsId"
+            resultMap="SysProductAttributeResult">
+        <include refid="selectSysProductAttributeVo"/> where product_id = #{productId}
+    </select>
+
+    <insert id="insertSysProductAttribute" parameterType="SysProductAttribute">
+        insert into sys_product_attribute
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="attributeDescribed != null">attribute_described,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="attributeName != null">attribute_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="attributeDescribed != null">#{attributeDescribed},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="attributeName != null">#{attributeName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysProductAttribute" parameterType="SysProductAttribute">
+        update sys_product_attribute
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="attributeDescribed != null">attribute_described = #{attributeDescribed},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="attributeName != null">attribute_name = #{attributeName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysProductAttributeById" parameterType="String">
+        delete from sys_product_attribute where id = #{id}
+    </delete>
+
+    <delete id="deleteSysProductAttributeByIds" parameterType="String">
+        delete from sys_product_attribute where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

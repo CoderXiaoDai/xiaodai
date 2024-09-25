@@ -25,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 商品Controller
  * 
  * @author ruoyi
- * @date 2024-09-17
+ * @date 2024-09-25
  */
 @RestController
 @RequestMapping("/system/products")
@@ -64,7 +64,7 @@ public class SysProductsController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:products:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
+    public AjaxResult getInfo(@PathVariable("id") String id)
     {
         return success(sysProductsService.selectSysProductsById(id));
     }
@@ -97,7 +97,7 @@ public class SysProductsController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:products:remove')")
     @Log(title = "商品", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
+    public AjaxResult remove(@PathVariable String[] ids)
     {
         return toAjax(sysProductsService.deleteSysProductsByIds(ids));
     }

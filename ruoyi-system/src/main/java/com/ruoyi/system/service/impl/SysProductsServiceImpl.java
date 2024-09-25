@@ -1,6 +1,11 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.SysProductAttribute;
+import com.ruoyi.system.domain.vo.SysProductsVO;
+import com.ruoyi.system.mapper.SysProductAttributeMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.SysProductsMapper;
@@ -11,13 +16,15 @@ import com.ruoyi.system.service.ISysProductsService;
  * 商品Service业务层处理
  * 
  * @author ruoyi
- * @date 2024-09-17
+ * @date 2024-09-25
  */
 @Service
 public class SysProductsServiceImpl implements ISysProductsService 
 {
     @Autowired
     private SysProductsMapper sysProductsMapper;
+    @Autowired
+    private SysProductAttributeMapper sysProductAttributeMapper;
 
     /**
      * 查询商品
@@ -26,9 +33,14 @@ public class SysProductsServiceImpl implements ISysProductsService
      * @return 商品
      */
     @Override
-    public SysProducts selectSysProductsById(Long id)
+    public SysProductsVO selectSysProductsById(String id)
     {
-        return sysProductsMapper.selectSysProductsById(id);
+        SysProducts sysProducts = sysProductsMapper.selectSysProductsById(id);
+        SysProductsVO sysProductsVO = new SysProductsVO();
+        BeanUtils.copyProperties(sysProducts,sysProductsVO);
+        SysProductAttribute  sysProductAttribute = sysProductAttributeMapper.selectSysProductAttributeBySysProductsId(id);
+        sysProductsVO.setSysProductAttribute(sysProductAttribute);
+        return sysProductsVO;
     }
 
     /**
@@ -74,7 +86,7 @@ public class SysProductsServiceImpl implements ISysProductsService
      * @return 结果
      */
     @Override
-    public int deleteSysProductsByIds(Long[] ids)
+    public int deleteSysProductsByIds(String[] ids)
     {
         return sysProductsMapper.deleteSysProductsByIds(ids);
     }
@@ -86,7 +98,7 @@ public class SysProductsServiceImpl implements ISysProductsService
      * @return 结果
      */
     @Override
-    public int deleteSysProductsById(Long id)
+    public int deleteSysProductsById(String id)
     {
         return sysProductsMapper.deleteSysProductsById(id);
     }

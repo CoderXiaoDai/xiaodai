@@ -7,7 +7,7 @@ import com.ruoyi.system.domain.SysProducts;
  * 商品Mapper接口
  * 
  * @author ruoyi
- * @date 2024-09-17
+ * @date 2024-09-25
  */
 public interface SysProductsMapper 
 {
@@ -17,7 +17,7 @@ public interface SysProductsMapper
      * @param id 商品主键
      * @return 商品
      */
-    public SysProducts selectSysProductsById(Long id);
+    public SysProducts selectSysProductsById(String id);
 
     /**
      * 查询商品列表
@@ -49,7 +49,7 @@ public interface SysProductsMapper
      * @param id 商品主键
      * @return 结果
      */
-    public int deleteSysProductsById(Long id);
+    public int deleteSysProductsById(String id);
 
     /**
      * 批量删除商品
@@ -57,5 +57,5 @@ public interface SysProductsMapper
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteSysProductsByIds(Long[] ids);
+    public int deleteSysProductsByIds(String[] ids);
 }

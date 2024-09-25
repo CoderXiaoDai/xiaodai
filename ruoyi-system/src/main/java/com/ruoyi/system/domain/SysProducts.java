@@ -12,14 +12,14 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 商品对象 sys_products
  * 
  * @author ruoyi
- * @date 2024-09-17
+ * @date 2024-09-25
  */
 public class SysProducts extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 商品ID */
-    private Long id;
+    private String id;
 
     /** 商品名称 */
     @Excel(name = "商品名称")
@@ -61,8 +61,8 @@ public class SysProducts extends BaseEntity
     @Excel(name = "其他图片，JSON格式存储")
     private String images;
 
-    /** 商品状态（1：上架，0：下架） */
-    @Excel(name = "商品状态", readConverterExp = "1=：上架，0：下架")
+    /** 商品状态（1：下架，0：上架） */
+    @Excel(name = "商品状态", readConverterExp = "1=：下架，0：上架")
     private Integer status;
 
     /** 创建时间 */
@@ -78,12 +78,12 @@ public class SysProducts extends BaseEntity
     @Excel(name = "像素ID")
     private Long pixelId;
 
-    public void setId(Long id) 
+    public void setId(String id) 
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public String getId() 
     {
         return id;
     }

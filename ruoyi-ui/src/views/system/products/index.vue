@@ -1,5 +1,8 @@
 <template>
+
   <div class="app-container">
+
+    <!-- /*  *********************************************  */ -->
     <el-form :model="queryParams"
              ref="queryForm"
              size="small"
@@ -61,16 +64,7 @@
                   clearable
                   @keyup.enter.native="handleQuery" />
       </el-form-item>
-      <!--       
-  <el-form-item label="像素ID"
-                    prop="pixelId">
-        <el-input v-model="que
-        
-        ryParams.pixelId"
-                  placeholder="请输入像素ID"
-                  clearable
-                  @keyup.enter.native="handleQuery" />
-      </el-form-item> -->
+
       <el-form-item label="商品状态"
                     prop="status">
 
@@ -144,6 +138,7 @@
     <el-table v-loading="loading"
               :data="productsList"
               @selection-change="handleSelectionChange">
+
       <el-table-column type="selection"
                        width="55"
                        align="center" />
@@ -255,107 +250,163 @@
                :visible.sync="open"
                width="80%"
                append-to-body>
-      <el-form ref="form"
-               :model="form"
-               :rules="rules"
-               label-width="80px">
-        <el-form-item label="商品名称"
-                      prop="name">
-          <el-input v-model="form.name"
-                    placeholder="请输入商品名称" />
-        </el-form-item>
-        <el-form-item label="内部名称"
-                      prop="internalName">
-          <el-input v-model="form.internalName"
-                    placeholder="请输入商品内部名称以及发货名称" />
-        </el-form-item>
-        <el-form-item label="商品分类 "
-                      prop="categoryId">
-          <el-select v-model="form.categoryId"
-                     placeholder="请选择商品分类 ">
-            <el-option v-for="dict in dict.type.sys_product_type"
-                       :key="dict.value"
-                       :label="dict.label"
-                       :value="parseInt(dict.value)"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="商品归属"
-                      prop="commodityOwnership">
-          <el-input v-model="form.commodityOwnership"
-                    placeholder="请输入商品归属" />
-        </el-form-item>
-        <el-form-item label="广告域名"
-                      prop="domainName">
-          <el-input v-model="form.domainName"
-                    placeholder="请输入链接广告域名" />
-        </el-form-item>
-        <el-form-item label="采购价格"
-                      prop="costPrice">
-          <el-input v-model="form.costPrice"
-                    placeholder="请输入采购价格" />
-        </el-form-item>
-        <el-form-item label="采购链接"
-                      prop="purchasingLinks">
-          <el-input v-model="form.purchasingLinks"
-                    placeholder="请输入采购链接" />
-        </el-form-item>
-        <el-form-item label="商品描述"
-                      prop="description">
-          <el-input v-model="form.description"
-                    type="textarea"
-                    placeholder="请输入内容" />
-        </el-form-item>
-        <el-form-item label="主图"
-                      prop="mainImage">
-          <image-upload v-model="form.mainImage" />
-        </el-form-item>
 
-        <el-form-item label="详情图"
-                      prop="images">
-          <image-upload v-model="form.images"
-                        :limit="50"
-                        accept="*.*"
-                        drag="true" />
-        </el-form-item>
-        <!-- <el-form-item label="创建时间"
-                      prop="createdAt">
-          <el-date-picker clearable
-                          v-model="form.createdAt"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择创建时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="是否删除"
-                      prop="isDeleted">
-          <el-input v-model="form.isDeleted"
-                    placeholder="请输入是否删除" />
-        </el-form-item> -->
-        <el-form-item label="像素ID"
-                      prop="pixelId">
-          <el-input v-model="form.pixelId"
-                    placeholder="请输入像素ID" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer"
-           class="dialog-footer">
-        <el-button type="primary"
-                   @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
+      <el-tabs v-model="activeName"
+               @tab-click="handleClick">
+        <el-tab-pane label="商品管理"
+                     name="0">
+
+          <el-form ref="form"
+                   :model="form"
+                   :rules="rules"
+                   label-width="80px">
+            <el-form-item label="商品名称"
+                          prop="name">
+              <el-input v-model="form.name"
+                        placeholder="请输入商品名称" />
+            </el-form-item>
+            <el-form-item label="内部名称"
+                          prop="internalName">
+              <el-input v-model="form.internalName"
+                        placeholder="请输入商品内部名称以及发货名称" />
+            </el-form-item>
+            <el-form-item label="商品分类 "
+                          prop="categoryId">
+              <el-select v-model="form.categoryId"
+                         placeholder="请选择商品分类 ">
+                <el-option v-for="dict in dict.type.sys_product_type"
+                           :key="dict.value"
+                           :label="dict.label"
+                           :value="parseInt(dict.value)"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="商品归属"
+                          prop="commodityOwnership">
+              <el-input v-model="form.commodityOwnership"
+                        placeholder="请输入商品归属" />
+            </el-form-item>
+            <el-form-item label="广告域名"
+                          prop="domainName">
+              <el-input v-model="form.domainName"
+                        placeholder="请输入链接广告域名" />
+            </el-form-item>
+            <el-form-item label="采购价格"
+                          prop="costPrice">
+              <el-input v-model="form.costPrice"
+                        placeholder="请输入采购价格" />
+            </el-form-item>
+            <el-form-item label="采购链接"
+                          prop="purchasingLinks">
+              <el-input v-model="form.purchasingLinks"
+                        placeholder="请输入采购链接" />
+            </el-form-item>
+            <el-form-item label="商品描述"
+                          prop="description">
+              <el-input v-model="form.description"
+                        type="textarea"
+                        placeholder="请输入内容" />
+            </el-form-item>
+            <el-form-item label="主图"
+                          prop="mainImage">
+              <image-upload v-model="form.mainImage" />
+            </el-form-item>
+
+            <el-form-item label="详情图"
+                          prop="images">
+              <image-upload v-model="form.images"
+                            :limit="50"
+                            accept="*.*"
+                            drag="true" />
+            </el-form-item>
+            <el-form-item label="像素ID"
+                          prop="pixelId">
+              <el-input v-model="form.pixelId"
+                        placeholder="请输入像素ID" />
+            </el-form-item>
+            <br>
+
+            <el-button type="primary"
+                       @click="submitForm()">确 定</el-button>
+            <el-button @click="cancel()">取 消</el-button>
+
+          </el-form>
+
+        </el-tab-pane>
+        <el-tab-pane label="添加属性"
+                     name="1">
+
+          <el-form :model="dynamicValidateForm"
+                   ref="dynamicValidateForm"
+                   align="center"
+                   class="demo-dynamic">
+
+            <el-form-item prop="value"
+                          label="请设置【规格/大小/型号/分类...】" />
+
+            <el-input v-model="dynamicValidateForm.productAttribute"></el-input> <br><br><br>
+
+            <!-- ---------------------------------------------------- -->
+            <el-form-item v-for="(domain, index) in dynamicValidateForm.domains"
+                          :label="'domains.' + index + '.value'"
+                          :key="domain.key"
+                          prop="domains.value">
+
+              <el-input v-model="dynamicValidateForm.domains[index].value"></el-input>
+
+              <el-form-item label='商品属性图'
+                            prop="domain.attributeImage">
+                <image-upload v-model="domain.attributeImage" />
+              </el-form-item>
+
+              <el-button @click.prevent="removeDomain(domain)">删除</el-button>
+
+            </el-form-item>
+
+            <!-- /** */ -->
+            <el-form-item>
+              <el-button type="primary"
+                         @click="submitFormforAttribute(dynamicValidateForm)">提交</el-button>
+              <el-button @click="addDomain">新增域名</el-button>
+
+            </el-form-item>
+          </el-form>
+        </el-tab-pane>
+        <el-tab-pane label="添加SKU"
+                     name="2">
+          <!-- <div slot="footer" -->
+          <!-- class="dialog-footer"> -->
+
+          <!-- </div> -->
+        </el-tab-pane>
+
+      </el-tabs>
+
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { listProducts, getProducts, delProducts, addProducts, updateProducts } from "@/api/system/products";
-import Sortable from 'sortablejs';
+import { listAttribute, getAttribute, delAttribute, addAttribute, updateAttribute } from "@/api/system/attribute";
 export default {
   name: "Products",
   dicts: ['sys_product_type'],
 
   data () {
     return {
+
+      //添加属性参数
+      dynamicValidateForm: {
+        domains: [{
+          value: '',
+          attributeImage: ''
+        }],
+        productAttribute: ''
+      },
+
+      // 步骤条参数
+      activeName: 0,
+
       // 遮罩层
       loading: true,
       // 选中数组
@@ -392,7 +443,11 @@ export default {
       userName: null,
 
       // 表单参数
-      form: {},
+      form: {
+        id: ""
+      },
+      //商品表单参数
+      attributeform: {},
       // 表单校验
       rules: {
         name: [
@@ -428,20 +483,6 @@ export default {
 
   methods: {
 
-    //支持拖拽排序
-    // initDragSort () {
-    //   const el = this.$refs.upload.$el.querySelectorAll('image-upload')[0];
-    //   Sortable.create(el, {
-    //     onEnd: ({ oldIndex, newIndex }) => {
-    //       // 交换位置
-    //       const arr = this.form.images;
-    //       const page = arr[oldIndex];
-    //       arr.splice(oldIndex, 1);
-    //       arr.splice(newIndex, 0, page);
-    //     }
-    //   });
-    // },
-
 
     /** 查询商品列表 */
     getList () {
@@ -457,6 +498,16 @@ export default {
     cancel () {
       this.open = false;
       this.reset();
+    },
+    //商品属性表单重置
+    attributeform () {
+      this.attributeform = {
+        id: null,
+        attributeDescribed: null,
+        productId: null,
+        attributeName: null
+      }
+      this.resetForm("attributeform");
     },
     // 表单重置
     reset () {
@@ -508,12 +559,19 @@ export default {
       const id = row.id || this.ids
 
       getProducts(id).then(response => {
-
         this.form = response.data;
         this.form.commodityOwnership = this.$store.state.user.name
         this.open = true;
         this.title = "修改商品";
+        if (response.data.sysProductAttribute == null || response.data.sysProductAttribute == "") {
+          this.resetDynamicValidateForm();
+        } else {
+
+          this.dynamicValidateForm = JSON.parse(response.data.sysProductAttribute.attributeDescribed);
+          console.log(this.dynamicValidateForm);
+        }
       });
+
     },
     // 修改商品上下架按钮
     handleUpdateProducts (row) {
@@ -539,6 +597,10 @@ export default {
               this.getList();
             });
           } else {
+            this.form.id = this.generateRandomID();
+
+            console.log(this.form);
+            alert(this.form.id);
             addProducts(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
@@ -563,6 +625,96 @@ export default {
       this.download('system/products/export', {
         ...this.queryParams
       }, `products_${new Date().getTime()}.xlsx`)
+    },
+    // 步骤条参数方法
+    handleClick (tab, event) {
+      console.log(tab, event);
+    },
+    resetDynamicValidateForm () {
+      this.dynamicValidateForm = {
+        domains: [{
+          value: '',
+          attributeImage: ''
+        }],
+        productAttribute: ''
+      }
+    },
+
+    //商品属性提交............................................................
+    submitFormforAttribute () {
+      // this.$refs["form"].validate(valid => {
+      // if (valid) {
+      //   if (this.form.id != null) {
+      //     updateProducts(this.attributeform).then(response => {
+      //       this.$modal.msgSuccess("修改成功");
+      //       this.open = false;
+      //       this.getList();
+      //     });
+      //   } else {
+      //     this.form.id = this.generateRandomID();
+      // this.attributeform.id = this.enerateRandomID();
+      // this.attributeform.attributeName = this.dynamicValidateForm.productAttribute
+      this.attributeform.productId = this.form.id;
+      this.attributeform.attributeDescribed = JSON.stringify(this.dynamicValidateForm)
+      console.log(this.form);
+      alert(this.form.id);
+      addAttribute(this.attributeform).then(response => {
+        this.$modal.msgSuccess("新增成功");
+        this.open = false;
+        this.getList();
+      });
+      // }
+      // }
+      // });
+    },
+
+
+    // submitFormforAttribute (dynamicValidateForm) {
+    //   this.attributeform.attributeName = dynamicValidateForm.productAttribute
+    //   this.attributeform.attributeDescribed = JSON.stringify(dynamicValidateForm.domains)
+    //   this.attributeform.productId = this.form.id
+    //   alert(this.attributeform.productId)
+    //   this.attributeform.id = generateRandomID();
+    //   this.$refs["form"].validate(valid => {
+    //     if (valid) {
+    //       if (this.form.id != null) {
+    //         addAttribute(this.attributeform).then(response => {
+    //           this.$modal.msgSuccess("修改成功");
+    //         });
+    //       }
+    //     } else {
+    //       this.$modal.msgSuccess("请检查其他选项是否填写完整~");
+    //     }
+    //   })
+    // },
+
+
+    //随机id 生产
+    generateRandomID () {
+      const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const idLength = 15; // 字符串长度 这里生成30位的
+      let randomID = '';
+
+      for (let i = 0; i < idLength; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        randomID += characters.charAt(randomIndex);
+      }
+
+      return randomID;
+    },
+
+    removeDomain (item) {
+      var index = this.dynamicValidateForm.domains.indexOf(item)
+      if (index !== -1) {
+        this.dynamicValidateForm.domains.splice(index, 1)
+      }
+    },
+    addDomain () {
+      this.dynamicValidateForm.domains.push({
+        value: '',
+        attributeImage: '',
+        key: Date.now()
+      });
     }
   }
 };

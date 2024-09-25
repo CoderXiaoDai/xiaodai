@@ -2,12 +2,13 @@ package com.ruoyi.system.service;
 
 import java.util.List;
 import com.ruoyi.system.domain.SysProducts;
+import com.ruoyi.system.domain.vo.SysProductsVO;
 
 /**
  * 商品Service接口
  * 
  * @author ruoyi
- * @date 2024-09-17
+ * @date 2024-09-25
  */
 public interface ISysProductsService 
 {
@@ -17,7 +18,7 @@ public interface ISysProductsService
      * @param id 商品主键
      * @return 商品
      */
-    public SysProducts selectSysProductsById(Long id);
+    public SysProductsVO selectSysProductsById(String id);
 
     /**
      * 查询商品列表
@@ -49,7 +50,7 @@ public interface ISysProductsService
      * @param ids 需要删除的商品主键集合
      * @return 结果
      */
-    public int deleteSysProductsByIds(Long[] ids);
+    public int deleteSysProductsByIds(String[] ids);
 
     /**
      * 删除商品信息
@@ -57,5 +58,5 @@ public interface ISysProductsService
      * @param id 商品主键
      * @return 结果
      */
-    public int deleteSysProductsById(Long id);
+    public int deleteSysProductsById(String id);
 }
