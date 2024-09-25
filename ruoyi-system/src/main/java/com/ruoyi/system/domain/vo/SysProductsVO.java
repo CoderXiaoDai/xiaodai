@@ -1,9 +1,12 @@
 package com.ruoyi.system.domain.vo;
 
+import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.system.domain.SysProductAttribute;
+import com.ruoyi.system.domain.SysProductSku;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class SysProductsVO implements Serializable {
     private static final long serialVersionUID = -5951189660529807154L;
@@ -41,7 +44,37 @@ public class SysProductsVO implements Serializable {
     /** 其他图片，JSON格式存储 */
     private String images;
 
+    public String getPixelId() {
+        return pixelId;
+    }
+
+    public void setPixelId(String pixelId) {
+        this.pixelId = pixelId;
+    }
+
+    private String pixelId;
+
     private SysProductAttribute sysProductAttribute;
+
+
+    public SysProductsVO(List<SysProductSku> sysProductSku) {
+        this.sysProductSku = sysProductSku;
+    }
+
+    public List<SysProductSku> getSysProductSku() {
+        return sysProductSku;
+    }
+
+    public void setSysProductSku(List<SysProductSku> sysProductSku) {
+        this.sysProductSku = sysProductSku;
+    }
+
+    private List<SysProductSku> sysProductSku;
+
+
+
+    public SysProductsVO() {
+    }
 
     public String getId() {
         return id;

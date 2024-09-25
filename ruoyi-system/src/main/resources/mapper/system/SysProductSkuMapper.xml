@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysProductSkuMapper">
+    
+    <resultMap type="SysProductSku" id="SysProductSkuResult">
+        <result property="id"    column="id"    />
+        <result property="price"    column="price"    />
+        <result property="skuDescribed"    column="sku_described"    />
+        <result property="remark"    column="remark"    />
+        <result property="number"    column="number"    />
+        <result property="skuLimit"    column="sku_limit"    />
+        <result property="productId"    column="product_id"    />
+    </resultMap>
+
+    <sql id="selectSysProductSkuVo">
+        select id, price, sku_described, remark, number, sku_limit, product_id from sys_product_sku
+    </sql>
+
+    <select id="selectSysProductSkuList" parameterType="SysProductSku" resultMap="SysProductSkuResult">
+        <include refid="selectSysProductSkuVo"/>
+        <where>  
+            <if test="price != null "> and price = #{price}</if>
+            <if test="skuDescribed != null  and skuDescribed != ''"> and sku_described = #{skuDescribed}</if>
+            <if test="number != null "> and number = #{number}</if>
+            <if test="skuLimit != null "> and sku_limit = #{skuLimit}</if>
+            <if test="productId != null  and productId != ''"> and product_id = #{productId}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysProductSkuById" parameterType="String" resultMap="SysProductSkuResult">
+        <include refid="selectSysProductSkuVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSysProductSku" parameterType="SysProductSku">
+        insert into sys_product_sku
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="price != null">price,</if>
+            <if test="skuDescribed != null">sku_described,</if>
+            <if test="remark != null">remark,</if>
+            <if test="number != null">number,</if>
+            <if test="skuLimit != null">sku_limit,</if>
+            <if test="productId != null">product_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="price != null">#{price},</if>
+            <if test="skuDescribed != null">#{skuDescribed},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="number != null">#{number},</if>
+            <if test="skuLimit != null">#{skuLimit},</if>
+            <if test="productId != null">#{productId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysProductSku" parameterType="SysProductSku">
+        update sys_product_sku
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="price != null">price = #{price},</if>
+            <if test="skuDescribed != null">sku_described = #{skuDescribed},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="number != null">number = #{number},</if>
+            <if test="skuLimit != null">sku_limit = #{skuLimit},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysProductSkuById" parameterType="String">
+        delete from sys_product_sku where id = #{id} or product_id = #{productId}
+    </delete>
+
+    <delete id="deleteSysProductSkuByIds" parameterType="String">
+        delete from sys_product_sku where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

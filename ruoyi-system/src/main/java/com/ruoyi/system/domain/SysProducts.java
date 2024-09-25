@@ -76,7 +76,7 @@ public class SysProducts extends BaseEntity
 
     /** 像素ID */
     @Excel(name = "像素ID")
-    private Long pixelId;
+    private String pixelId;
 
     public void setId(String id) 
     {
@@ -204,12 +204,12 @@ public class SysProducts extends BaseEntity
     {
         return isDeleted;
     }
-    public void setPixelId(Long pixelId) 
+    public void setPixelId(String pixelId)
     {
         this.pixelId = pixelId;
     }
 
-    public Long getPixelId() 
+    public String getPixelId()
     {
         return pixelId;
     }

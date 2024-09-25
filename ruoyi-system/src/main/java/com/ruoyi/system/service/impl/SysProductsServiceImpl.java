@@ -3,8 +3,10 @@ package com.ruoyi.system.service.impl;
 import java.util.List;
 
 import com.ruoyi.system.domain.SysProductAttribute;
+import com.ruoyi.system.domain.SysProductSku;
 import com.ruoyi.system.domain.vo.SysProductsVO;
 import com.ruoyi.system.mapper.SysProductAttributeMapper;
+import com.ruoyi.system.mapper.SysProductSkuMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,9 @@ public class SysProductsServiceImpl implements ISysProductsService
     @Autowired
     private SysProductAttributeMapper sysProductAttributeMapper;
 
+    @Autowired
+    private SysProductSkuMapper sysProductSkuMapper;
+
     /**
      * 查询商品
      * 
@@ -36,10 +41,20 @@ public class SysProductsServiceImpl implements ISysProductsService
     public SysProductsVO selectSysProductsById(String id)
     {
         SysProducts sysProducts = sysProductsMapper.selectSysProductsById(id);
+        SysProductSku sysProductSku = new SysProductSku();
+        sysProductSku.setProductId(id);
+        List<SysProductSku> sysProductSkus = sysProductSkuMapper.selectSysProductSkuList(sysProductSku);
+
         SysProductsVO sysProductsVO = new SysProductsVO();
         BeanUtils.copyProperties(sysProducts,sysProductsVO);
+
         SysProductAttribute  sysProductAttribute = sysProductAttributeMapper.selectSysProductAttributeBySysProductsId(id);
         sysProductsVO.setSysProductAttribute(sysProductAttribute);
+        sysProductsVO.setSysProductSku(sysProductSkus);
+        BeanUtils.copyProperties(sysProductSkus,sysProductsVO);
+        System.out.println(sysProductsVO);
+        System.out.println(sysProductsVO.getSysProductAttribute());
+        System.out.println(sysProductsVO.getSysProductSku());
         return sysProductsVO;
     }
 

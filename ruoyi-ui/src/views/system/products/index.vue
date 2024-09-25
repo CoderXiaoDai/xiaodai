@@ -341,14 +341,17 @@
                    class="demo-dynamic">
 
             <el-form-item prop="value"
-                          label="请设置【规格/大小/型号/分类...】" />
+                          label="请设置【规格/大小/型号/分类...】">
+
+              <el-button @click="delDynamicValidateForm">删除</el-button>
+            </el-form-item>
 
             <el-input v-model="dynamicValidateForm.productAttribute"></el-input> <br><br><br>
 
             <!-- ---------------------------------------------------- -->
             <el-form-item v-for="(domain, index) in dynamicValidateForm.domains"
                           :label="'domains.' + index + '.value'"
-                          :key="domain.key"
+                          :key="domain.id"
                           prop="domains.value">
 
               <el-input v-model="dynamicValidateForm.domains[index].value"></el-input>
@@ -371,11 +374,132 @@
             </el-form-item>
           </el-form>
         </el-tab-pane>
+
+        <!-- **************************************************** -->
         <el-tab-pane label="添加SKU"
                      name="2">
-          <!-- <div slot="footer" -->
-          <!-- class="dialog-footer"> -->
+          <el-form :model="skuobj"
+                   ref="skuForm"
+                   label-width="100px"
+                   class="demo-dynamic">
+            <el-form-item label="请设置SUK以及卖法"
+                          label-width="autu">
 
+              <el-button @click="addskubutton()">新增</el-button>
+              <el-button type="primary"
+                         @click="submitFormforSku()">提交</el-button>
+            </el-form-item>
+
+            <!-- ***************************** -->
+            <table>
+              <th>
+                请设置SKU卖法：
+              </th>
+              <th>
+                请设置价格：
+              </th>
+              <th>
+                请输入商品购买数量：
+              </th>
+              <th>
+                排序：
+              </th>
+              <th>
+                备注（赠送链接、赠送物品、价格）：
+              </th>
+              <th>
+                操作
+              </th>
+              <tbody>
+                <td><el-form-item v-for="(skuobj) in skuobj"
+                                :item="skuobj"
+                                :index="index"
+                                :key="skuobj.id">
+
+                    <el-form-item prop="skuobj">
+                      <el-input v-model="skuobj.skuDescribed"
+                                placeholder="【**】*入组【数词】-NT$** 均价** " />
+
+                    </el-form-item>
+
+                  </el-form-item></td>
+                <td>
+                  <el-form-item v-for="(skuobj) in skuobj"
+                                :item="skuobj"
+                                :index="index"
+                                :key="skuobj.id">
+
+                    <el-form-item prop="skuobj">
+
+                      <el-input v-model="skuobj.price" />
+
+                    </el-form-item>
+
+                  </el-form-item>
+                </td>
+                <td>
+                  <el-form-item v-for="(skuobj) in skuobj"
+                                :item="skuobj"
+                                :index="index"
+                                :key="skuobj.id">
+
+                    <el-form-item prop="skuobj">
+
+                      <el-input v-model="skuobj.number" />
+
+                    </el-form-item>
+
+                  </el-form-item>
+                </td>
+                <td>
+                  <el-form-item v-for="(skuobj) in skuobj"
+                                :item="skuobj"
+                                :index="index"
+                                :key="skuobj.id">
+
+                    <el-form-item prop="skuobj">
+
+                      <el-input v-model="skuobj.skuLimit" />
+
+                    </el-form-item>
+
+                    <!-- <el-button @click.prevent="removeDomain(domain)">删除</el-button> -->
+                  </el-form-item>
+                </td>
+                <td>
+                  <el-form-item v-for="(skuobj) in skuobj"
+                                :item="skuobj"
+                                :index="index"
+                                :key="skuobj.id">
+
+                    <el-form-item prop="skuobj">
+
+                      <el-input v-model="skuobj.remark" />
+
+                    </el-form-item>
+
+                  </el-form-item>
+                </td>
+                <td>
+                  <el-form-item v-for="(skuobj,index) in skuobj"
+                                :item="skuobj"
+                                :index="index"
+                                :key="skuobj.id">
+
+                    <el-form-item>
+
+                      <el-button @click.prevent="removeskuobj(skuobj.id,index)">删除</el-button>
+
+                    </el-form-item>
+
+                  </el-form-item>
+                </td>
+              </tbody>
+
+            </table>
+
+          </el-form>
+          <!-- **************************************************** -->
           <!-- </div> -->
         </el-tab-pane>
 
@@ -388,6 +512,7 @@
 <script>
 import { listProducts, getProducts, delProducts, addProducts, updateProducts } from "@/api/system/products";
 import { listAttribute, getAttribute, delAttribute, addAttribute, updateAttribute } from "@/api/system/attribute";
+import { listSku, getSku, delSku, addSku, updateSku } from "@/api/system/sku";
 export default {
   name: "Products",
   dicts: ['sys_product_type'],
@@ -439,6 +564,9 @@ export default {
         pixelId: null
       },
 
+
+      skuobj: [],
+
       //当前用户名
       userName: null,
 
@@ -473,13 +601,9 @@ export default {
   },
   created () {
     this.getList();
-    // this.userName = this.$store.state.user.name
 
   },
 
-  // mounted () {
-  //   this.initDragSort();
-  // },
 
   methods: {
 
@@ -492,7 +616,10 @@ export default {
         this.productsList = response.rows;
         this.total = response.total;
         this.loading = false;
+        console.log(this.productsList)
       });
+
+
     },
     // 取消按钮
     cancel () {
@@ -500,15 +627,19 @@ export default {
       this.reset();
     },
     //商品属性表单重置
-    attributeform () {
+    reSetAttributeform () {
       this.attributeform = {
         id: null,
         attributeDescribed: null,
         productId: null,
         attributeName: null
       }
-      this.resetForm("attributeform");
+      // this.reSetAttributeform();
+      // this.resetForm();
+      // this.resetForm();
     },
+
+
     // 表单重置
     reset () {
       this.form = {
@@ -549,6 +680,7 @@ export default {
     /** 新增按钮操作 */
     handleAdd () {
       this.reset();
+      this.resetDynamicValidateForm();
       this.form.commodityOwnership = this.$store.state.user.name
       this.open = true;
       this.title = "添加商品";
@@ -558,17 +690,26 @@ export default {
       this.reset();
       const id = row.id || this.ids
 
+
+      this.test = id
+      this.getskumethod();
+      this.skuobj.productId = id;
+
       getProducts(id).then(response => {
         this.form = response.data;
+        console.log(response)
         this.form.commodityOwnership = this.$store.state.user.name
         this.open = true;
         this.title = "修改商品";
         if (response.data.sysProductAttribute == null || response.data.sysProductAttribute == "") {
           this.resetDynamicValidateForm();
+          // alert(this.dynamicValidateForm.id);
         } else {
 
           this.dynamicValidateForm = JSON.parse(response.data.sysProductAttribute.attributeDescribed);
-          console.log(this.dynamicValidateForm);
+          this.dynamicValidateForm.id = response.data.sysProductAttribute.id
+          // alert(this.dynamicValidateForm.id);
+          // console.log(this.dynamicValidateForm); 
         }
       });
 
@@ -597,10 +738,11 @@ export default {
               this.getList();
             });
           } else {
+
             this.form.id = this.generateRandomID();
 
             console.log(this.form);
-            alert(this.form.id);
+            // alert(this.form.id);
             addProducts(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
@@ -642,52 +784,26 @@ export default {
 
     //商品属性提交............................................................
     submitFormforAttribute () {
-      // this.$refs["form"].validate(valid => {
-      // if (valid) {
-      //   if (this.form.id != null) {
-      //     updateProducts(this.attributeform).then(response => {
-      //       this.$modal.msgSuccess("修改成功");
-      //       this.open = false;
-      //       this.getList();
-      //     });
-      //   } else {
-      //     this.form.id = this.generateRandomID();
-      // this.attributeform.id = this.enerateRandomID();
-      // this.attributeform.attributeName = this.dynamicValidateForm.productAttribute
-      this.attributeform.productId = this.form.id;
-      this.attributeform.attributeDescribed = JSON.stringify(this.dynamicValidateForm)
-      console.log(this.form);
-      alert(this.form.id);
-      addAttribute(this.attributeform).then(response => {
-        this.$modal.msgSuccess("新增成功");
-        this.open = false;
-        this.getList();
-      });
-      // }
-      // }
-      // });
+
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.id != null) {
+            this.attributeform.attributeName = this.dynamicValidateForm.productAttribute
+            this.attributeform.productId = this.form.id;
+            this.attributeform.attributeDescribed = JSON.stringify(this.dynamicValidateForm)
+
+
+            addAttribute(this.attributeform).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
+          }
+        } else {
+          this.$modal.msgSuccess("请检查新增商品信息是否填写完整~");
+        }
+      })
     },
-
-
-    // submitFormforAttribute (dynamicValidateForm) {
-    //   this.attributeform.attributeName = dynamicValidateForm.productAttribute
-    //   this.attributeform.attributeDescribed = JSON.stringify(dynamicValidateForm.domains)
-    //   this.attributeform.productId = this.form.id
-    //   alert(this.attributeform.productId)
-    //   this.attributeform.id = generateRandomID();
-    //   this.$refs["form"].validate(valid => {
-    //     if (valid) {
-    //       if (this.form.id != null) {
-    //         addAttribute(this.attributeform).then(response => {
-    //           this.$modal.msgSuccess("修改成功");
-    //         });
-    //       }
-    //     } else {
-    //       this.$modal.msgSuccess("请检查其他选项是否填写完整~");
-    //     }
-    //   })
-    // },
-
 
     //随机id 生产
     generateRandomID () {
@@ -703,6 +819,13 @@ export default {
       return randomID;
     },
 
+    delDynamicValidateForm () {
+      // alert(this.dynamicValidateForm.id);
+      delAttribute(this.dynamicValidateForm.id).then(response => {
+        // alert(this.dynamicValidateForm.id);
+        this.resetDynamicValidateForm()
+      })
+    },
     removeDomain (item) {
       var index = this.dynamicValidateForm.domains.indexOf(item)
       if (index !== -1) {
@@ -715,8 +838,70 @@ export default {
         attributeImage: '',
         key: Date.now()
       });
-    }
+    },
+    // *****************************************************************************SKU
+    removeskuobj (item, value) {
+      // var index = this.skuobj.indexOf(value)
+      var index = value
+
+      if (index !== -1) {
+        this.skuobj.splice(index, 1)
+        delSku(item).then(response => {
+          this.$modal.msgSuccess("删除成功");
+          // this.open = false;
+          this.getList();
+        })
+      }
+
+
+
+    },
+    addskubutton () {
+
+      this.skuobj.push({
+        price: "",
+        skuDescribed: "",
+        remark: "",
+        number: "",
+        skuLimit: "",
+        productId: this.form.id
+      });
+      console.log(this.skuobj)
+    },
+
+
+    submitFormforSku () {
+
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.id != null) {
+
+            addSku(this.skuobj).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.skuobj = null;
+              this.getList();
+            });
+          }
+        } else {
+          this.$modal.msgSuccess("请检查新增商品信息是否填写完整~");
+        }
+      })
+    },
+    getskumethod () {
+
+      var formsku = {
+        productId: this.test
+      }
+      listSku(formsku).then(response => {
+        this.skuobj = response.rows
+        console.log(this.skuobj);
+      })
+    },
+
   }
+
+
 };
 </script>
 
